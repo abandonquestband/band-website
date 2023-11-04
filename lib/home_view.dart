@@ -42,7 +42,7 @@ class HomeView extends StatelessWidget {
                 height: screenSize.height,
                 width: screenSize.width,
                 platformAwarePath("images/bg-real-ocean-dark.png"),
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
               );
             },
             offsetBuilder: ((scrollOffset) => Offset(0, scrollOffset)),
