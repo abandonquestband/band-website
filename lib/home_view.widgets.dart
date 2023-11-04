@@ -9,29 +9,30 @@ class BottomSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
-      height: screenSize.height,
-      width: screenSize.width,
-      color: Color.fromARGB(99, 1, 187, 224),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            top: -50,
-            child: Center(
-              child: Text(
-                'Abandon Quest is a video game band from Minneapolis, Minnesota.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.biryani(
-                  color: Colors.white,
-                  fontSize: 80,
-                  fontWeight: FontWeight.w800,
-                  height: 1.2,
+        height: screenSize.height * .3,
+        width: screenSize.width,
+        color: Color.fromARGB(99, 1, 187, 224),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Center(
+                  child: Text(
+                    'From Minneapolis, Minnesota, Abandon Quest puts unique spins on treasured tunes, with synchronized visuals or live gameplay.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.biryani(
+                      color: Colors.white,
+                      fontSize: boundNumber(screenSize.width * .08, 20, 10),
+                      fontWeight: FontWeight.w800,
+                      height: 1.2,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -57,13 +58,14 @@ class OverlayTextSection extends StatelessWidget {
                     screenSize.height / screenSize.width * 40, 300, 0),
                 child: SizedBox(
                     width: boundNumber(screenSize.width, 800, 100),
-                    child: Image.asset("images/title-and-octopus.png")),
+                    child: Image.asset(
+                        platformAwarePath("images/title-and-octopus.png"))),
               ),
               Positioned(
                 bottom: 0,
                 child: SizedBox(
-                    width: boundNumber(screenSize.width, 900, 600),
-                    child: Image.asset("images/people.png")),
+                    width: boundNumber(screenSize.width, 900, 300),
+                    child: Image.asset(platformAwarePath("images/people.png"))),
               ),
             ],
           ),

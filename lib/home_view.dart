@@ -33,37 +33,44 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xffFEE5CA),
+      backgroundColor: Color.fromARGB(255, 0, 13, 45),
       body: ScrollTransformView(
         children: [
           ScrollTransformItem(
             builder: (context) {
-              return ColorFiltered(
-                  colorFilter: ColorFilter.mode(
-                    Colors.black
-                        .withOpacity(0.6), // Adjust opacity to control darkness
-                    BlendMode.srcOver,
-                  ),
-                  child: Image.asset(
-                    height: screenSize.height,
-                    width: screenSize.width,
-                    "images/bg-real-ocean.jpg",
-                    fit: BoxFit.cover,
-                  ));
+              return Image.asset(
+                height: screenSize.height,
+                width: screenSize.width,
+                platformAwarePath("images/bg-real-ocean-dark.png"),
+                fit: BoxFit.fitWidth,
+              );
             },
-            offsetBuilder: ((scrollOffset) => Offset(0, scrollOffset * .7)),
+            offsetBuilder: ((scrollOffset) => Offset(0, scrollOffset)),
+          ),
+          ScrollTransformItem(
+            builder: (context) {
+              return Image.asset(
+                  height: screenSize.height,
+                  platformAwarePath("images/its-a-fish.png"),
+                  fit: BoxFit.fitWidth);
+            },
+            offsetBuilder: ((scrollOffset) => Offset(
+                scrollOffset * .2 - screenSize.width * .08,
+                -screenSize.height + scrollOffset)),
           ),
           ScrollTransformItem(
             builder: (context) {
               return const OverlayTextSection();
             },
-            offsetBuilder: ((scrollOffset) => Offset(0, -screenSize.height)),
+            offsetBuilder: ((scrollOffset) =>
+                Offset(0, -screenSize.height * 2)),
           ),
           ScrollTransformItem(
             builder: (context) {
               return const BottomSection();
             },
-            offsetBuilder: ((scrollOffset) => Offset(0, -screenSize.height)),
+            offsetBuilder: ((scrollOffset) =>
+                Offset(0, -screenSize.height * 2)),
           ),
         ],
       ),
