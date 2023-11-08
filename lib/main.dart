@@ -19,7 +19,7 @@ class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return MaterialApp(
-        title: 'Abandon Quest Video Game Band',
+        title: 'Abandon Quest Video Game Band ${screenSize.height}',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -60,10 +60,41 @@ class MainWidget extends StatelessWidget {
               children: [WelcomeScreen()],
             ),
             BottomSection(),
+            SizedBox(height: 15),
             SizedBox(
-                width: 20,
-                child:
-                    Image.asset(platformAwarePath("images/show-bowser-ss.png")))
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                      width: boundNumber(screenSize.width, 1500, 0),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromARGB(99, 1, 187, 224),
+                          width: 12.0, // Border thickness
+                        ),
+                        color: Color.fromARGB(99, 1, 187, 224),
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 0, 0, 0)
+                                .withOpacity(0.5), // Shadow color
+                            blurRadius: 5.0, // Shadow blur radius
+                            offset: Offset(0, 2), // Shadow offset
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        child: Align(
+                          alignment: Alignment.center,
+                          heightFactor:
+                              boundNumber(500 / screenSize.height, 1, .3),
+                          child: Image.asset(
+                              platformAwarePath("images/show-bowser-ss.png")),
+                        ),
+                      ))
+                ],
+              ),
+            ),
           ],
         ),
       ],
@@ -86,7 +117,7 @@ class TreasureChestFalling extends StatelessWidget {
     return Transform(
         transform: Matrix4.translationValues(
             0,
-            fishDelta * 10 - screenSize.width / 2,
+            fishDelta * .3 * 10 - screenSize.width / 2,
             0.0), // Translate by 50 units horizontally and 100 units vertically
         child: Transform.scale(
           scale: boundNumber(
