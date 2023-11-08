@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({
     Key? key,
@@ -13,7 +12,6 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return SizedBox(
-        child: SizedBox(
       height: screenSize.height * .8,
       width: screenSize.width,
       child: Stack(
@@ -34,6 +32,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }

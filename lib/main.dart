@@ -35,9 +35,10 @@ class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
                     }
                     return true;
                   },
-                  child:
-                      MainWidget(fishDelta: fishDelta, screenSize: screenSize))),
-          "splash-image": (context) => Image.asset("")
+                  child: MainWidget(
+                      fishDelta: fishDelta, screenSize: screenSize))),
+          "splash-image": (context) =>
+              Image.asset(platformAwarePath("images/band-photo_16x9.png"))
         });
   }
 }
@@ -51,23 +52,55 @@ class MainWidget extends StatelessWidget {
     return Stack(
       children: [
         BackgroundContent(),
-        FishiesSwimming(
-            fishDelta: fishDelta,
-            screenSize:
-                screenSize) // Replace YourWidget with the widget you want to transform
-        ,
+        TreasureChestFalling(fishDelta: fishDelta, screenSize: screenSize),
+        FishiesSwimming(fishDelta: fishDelta, screenSize: screenSize),
         ListView(
           children: [
             Stack(
-              children: [
-                WelcomeScreen(),
-              ],
+              children: [WelcomeScreen()],
             ),
-            BottomSection()
+            BottomSection(),
+            SizedBox(
+                width: 20,
+                child:
+                    Image.asset(platformAwarePath("images/show-bowser-ss.png")))
           ],
         ),
       ],
     );
+  }
+}
+
+class TreasureChestFalling extends StatelessWidget {
+  const TreasureChestFalling({
+    super.key,
+    required this.fishDelta,
+    required this.screenSize,
+  });
+
+  final double fishDelta;
+  final Size screenSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+        transform: Matrix4.translationValues(
+            0,
+            fishDelta * 10 - screenSize.width / 2,
+            0.0), // Translate by 50 units horizontally and 100 units vertically
+        child: Transform.scale(
+          scale: boundNumber(
+            3.0 -
+                (screenSize.height - 600.0) /
+                    (1080.0 - 600.0) *
+                    2.0, // Adjust the scaling factor
+            1.0, // Maximum scale value
+            0.5, // Minimum scale value
+          ), // Adjust the scale factor as needed
+          child: Image.asset(
+              platformAwarePath("images/treasure-chest-falling.png"),
+              height: screenSize.height),
+        ));
   }
 }
 
@@ -91,11 +124,11 @@ class FishiesSwimming extends StatelessWidget {
         child: Transform.scale(
           scale: boundNumber(
             3.0 -
-                (screenSize.height - 600.0) /
+                (screenSize.height * .1 - 600.0) /
                     (1080.0 - 600.0) *
                     2.0, // Adjust the scaling factor
-            2.0, // Maximum scale value
-            1.0, // Minimum scale value
+            1.0, // Maximum scale value
+            0.2, // Minimum scale value
           ), // Adjust the scale factor as needed
           child: Image.asset(platformAwarePath("images/its-a-fish.png"),
               height: screenSize.height),
