@@ -1,9 +1,14 @@
 import 'package:band_website/bottom_section.dart';
 import 'package:flutter/material.dart';
+import 'package:url_strategy/url_strategy.dart';
 import '/welcome_screen.dart';
 import 'helper_functions.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
+import 'dart:html' as html;
 
 void main() {
+  setPathUrlStrategy();
   runApp(MyScrollableWebsite());
 }
 
@@ -14,6 +19,17 @@ class MyScrollableWebsite extends StatefulWidget {
 
 class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
   double fishDelta = 0;
+  String _initialRoute = '';
+
+  @override
+  void initState() {
+    String initialUrl = html.window.location.href;
+    final url = Uri.parse(initialUrl);
+    final lastPathSegment =
+        url.pathSegments.isNotEmpty ? url.pathSegments.last : 'default';
+    _initialRoute = lastPathSegment;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +39,7 @@ class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        initialRoute: _initialRoute,
         routes: {
           "/": (context) => Scaffold(
               body: NotificationListener(
@@ -43,8 +60,32 @@ class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
   }
 }
 
+
+
+class MyCustomClipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) {
+    // Define the clipping area
+    final topMargin = 0.0; // Adjust this value to control how much to clip from the top
+    final bottomMargin = 0.0; // Adjust this value to control how much to clip from the bottom
+    return Rect.fromLTRB(
+      0, 
+      topMargin, 
+      size.width, 
+      size.height - bottomMargin
+    );
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return false;
+  }
+}
+
 class MainWidget extends StatelessWidget {
   MainWidget({super.key, required this.fishDelta, required this.screenSize});
+
+
   final double fishDelta;
   final Size screenSize;
   @override
@@ -60,38 +101,41 @@ class MainWidget extends StatelessWidget {
               children: [WelcomeScreen()],
             ),
             BottomSection(),
-            SizedBox(height: 15),
             SizedBox(
               child: Stack(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 children: [
-                  Container(
-                      width: boundNumber(screenSize.width, 1500, 0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color.fromARGB(99, 1, 187, 224),
-                          width: 12.0, // Border thickness
-                        ),
-                        color: Color.fromARGB(99, 1, 187, 224),
-                        borderRadius: BorderRadius.circular(12.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.5), // Shadow color
-                            blurRadius: 5.0, // Shadow blur radius
-                            offset: Offset(0, 2), // Shadow offset
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        child: Align(
-                          alignment: Alignment.center,
-                          heightFactor:
-                              boundNumber(500 / screenSize.height, 1, .3),
-                          child: Image.asset(
-                              platformAwarePath("images/show-bowser-ss.png")),
-                        ),
-                      ))
+                  ClipRect(
+                    clipper: MyCustomClipper(),
+                    child:Container(color: Color.fromARGB(120, 0, 0, 0), height: boundNumber(8/17*screenSize.width, 500, 100), child:SplashVideo()))
+                  // Container(
+                  //     width: boundNumber(screenSize.width, 1000, 0),
+                  //     decoration: BoxDecoration(
+                  //       border: Border.all(
+                  //         color: Color.fromARGB(99, 1, 187, 224),
+                  //         width: 8.0, // Border thickness
+                  //       ),
+                  //       color: Color.fromARGB(99, 1, 187, 224),
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //           color: const Color.fromARGB(255, 0, 0, 0)
+                  //               .withOpacity(0.5), // Shadow color
+                  //           blurRadius: 5.0, // Shadow blur radius
+                  //           offset: Offset(0, 2), // Shadow offset
+                  //         ),
+                  //       ],
+                  //     ),
+                      // child: ClipRRect(
+                      //   child: Align(
+                      //     alignment: Alignment.center,
+                      //     heightFactor:
+                      //         boundNumber(500 / screenSize.height, 1, .3),
+                      //     child: Image.asset(
+                      //         platformAwarePath("images/show-bowser-ss.png")),
+                      //   ),
+                      // )
+                      // ),
                 ],
               ),
             ),
@@ -101,6 +145,70 @@ class MainWidget extends StatelessWidget {
     );
   }
 }
+
+class SplashVideo extends StatefulWidget {
+  const SplashVideo({
+    super.key,
+  });
+
+  @override
+  State<SplashVideo> createState() => _SplashVideoState();
+}
+
+class _SplashVideoState extends State<SplashVideo> {
+  final VideoPlayerController videoPlayerController = VideoPlayerController.networkUrl(
+    Uri.parse("https://github.com/abandonquestband/sheet-hub-public/raw/main/splash-video.mp4"));
+  ChewieController? chewieController;
+  @override
+  void initState() {
+
+    super.initState();
+    _initPlayer();
+  }
+
+
+  void _initPlayer() async {
+    await videoPlayerController.initialize();
+    chewieController = ChewieController(
+      videoPlayerController: videoPlayerController,
+      autoPlay: false,
+      
+      looping: false,
+      showOptions: true,
+      showControls: true
+      // additionalOptions: (context) {
+      //   return <OptionItem>[
+      //     OptionItem(
+      //       onTap: () => debugPrint('Option 1 pressed!'),
+      //       iconData: Icons.chat,
+      //       title: 'Option 1',
+      //     ),
+      //     OptionItem(
+      //       onTap: () =>
+      //           debugPrint('Option 2 pressed!'),
+      //       iconData: Icons.share,
+      //       title: 'Option 2',
+      //     ),
+      //   ];
+      // },
+    );
+  }
+
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    chewieController?.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return chewieController!=null ? Chewie(
+          controller: chewieController!,
+        ) : SizedBox();
+  }
+}
+
 
 class TreasureChestFalling extends StatelessWidget {
   const TreasureChestFalling({
