@@ -40,11 +40,7 @@ dependencies:
   url_launcher: ^6.2.1
   url_strategy: ^0.2.0
   chewie: ^1.7.1
-  # video_player:
-  #   git:
-  #     url: git@github.com:ditman/flutter-packages.git
-  #     ref: video-player-listen-ios17-events
-  video_player: ^2.8.1
+  video_player_web: ^2.1.2
 
 dev_dependencies:
   flutter_test:
