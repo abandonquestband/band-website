@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
 
 double boundNumber(double normalNumber, double max, double min) {
   if (normalNumber >= max) {
@@ -19,4 +20,10 @@ Future<void> openUrl(path) async {
   if (!await launchUrl(url)) {
     throw Exception('Could not launch $url');
   }
+}
+
+
+bool isiPhone() {
+  final userAgent = html.window.navigator.userAgent;
+  return userAgent.contains('iPhone');
 }

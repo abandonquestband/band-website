@@ -1,6 +1,7 @@
 import 'package:band_website/bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '/welcome_screen.dart';
 import 'helper_functions.dart';
 import 'package:chewie/chewie.dart';
@@ -60,20 +61,15 @@ class _MyScrollableWebsiteState extends State<MyScrollableWebsite> {
   }
 }
 
-
-
 class MyCustomClipper extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
     // Define the clipping area
-    final topMargin = 0.0; // Adjust this value to control how much to clip from the top
-    final bottomMargin = 0.0; // Adjust this value to control how much to clip from the bottom
-    return Rect.fromLTRB(
-      0, 
-      topMargin, 
-      size.width, 
-      size.height - bottomMargin
-    );
+    final topMargin =
+        0.0; // Adjust this value to control how much to clip from the top
+    final bottomMargin =
+        0.0; // Adjust this value to control how much to clip from the bottom
+    return Rect.fromLTRB(0, topMargin, size.width, size.height - bottomMargin);
   }
 
   @override
@@ -82,67 +78,103 @@ class MyCustomClipper extends CustomClipper<Rect> {
   }
 }
 
-class MainWidget extends StatelessWidget {
+class MainWidget extends StatefulWidget {
   MainWidget({super.key, required this.fishDelta, required this.screenSize});
-
 
   final double fishDelta;
   final Size screenSize;
+
+  @override
+  State<MainWidget> createState() => _MainWidgetState();
+}
+
+class _MainWidgetState extends State<MainWidget> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    // initialize scroll controllers
+    _scrollController = ScrollController();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        BackgroundContent(),
-        TreasureChestFalling(fishDelta: fishDelta, screenSize: screenSize),
-        FishiesSwimming(fishDelta: fishDelta, screenSize: screenSize),
-        ListView(
-          children: [
-            Stack(
-              children: [WelcomeScreen()],
-            ),
-            BottomSection(),
-            SizedBox(
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  ClipRect(
-                    clipper: MyCustomClipper(),
-                    child:Container(color: Color.fromARGB(120, 0, 0, 0), height: boundNumber(8/17*screenSize.width, 500, 100), child:SplashVideo()))
-                  // Container(
-                  //     width: boundNumber(screenSize.width, 1000, 0),
-                  //     decoration: BoxDecoration(
-                  //       border: Border.all(
-                  //         color: Color.fromARGB(99, 1, 187, 224),
-                  //         width: 8.0, // Border thickness
-                  //       ),
-                  //       color: Color.fromARGB(99, 1, 187, 224),
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //           color: const Color.fromARGB(255, 0, 0, 0)
-                  //               .withOpacity(0.5), // Shadow color
-                  //           blurRadius: 5.0, // Shadow blur radius
-                  //           offset: Offset(0, 2), // Shadow offset
-                  //         ),
-                  //       ],
-                  //     ),
-                      // child: ClipRRect(
-                      //   child: Align(
-                      //     alignment: Alignment.center,
-                      //     heightFactor:
-                      //         boundNumber(500 / screenSize.height, 1, .3),
-                      //     child: Image.asset(
-                      //         platformAwarePath("images/show-bowser-ss.png")),
-                      //   ),
-                      // )
-                      // ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+    return WebSmoothScroll(
+        controller: _scrollController,
+        scrollOffset: 100,
+        animationDuration: 600,
+        curve: Curves.easeInOutCirc,
+        child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _scrollController,
+            child: Container(
+                height: widget.screenSize.height,
+                width: widget.screenSize.width,
+                child: Stack(
+                  children: [
+                    BackgroundContent(),
+                    TreasureChestFalling(
+                        fishDelta: widget.fishDelta,
+                        screenSize: widget.screenSize),
+                    FishiesSwimming(
+                        fishDelta: widget.fishDelta,
+                        screenSize: widget.screenSize),
+                    ListView(
+                      children: [
+                        Stack(
+                          children: [WelcomeScreen()],
+                        ),
+                        BottomSection(),
+                        SizedBox(
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              ClipRect(
+                                  clipper: MyCustomClipper(),
+                                  child: Container(
+                                      color: Color.fromARGB(120, 0, 0, 0),
+                                      height: boundNumber(
+                                          8 / 17 * widget.screenSize.width,
+                                          500,
+                                          100),
+                                      child: SplashVideo()))
+                              // Container(
+                              //     width: boundNumber(screenSize.width, 1000, 0),
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(
+                              //         color: Color.fromARGB(99, 1, 187, 224),
+                              //         width: 8.0, // Border thickness
+                              //       ),
+                              //       color: Color.fromARGB(99, 1, 187, 224),
+                              //       borderRadius: BorderRadius.circular(12.0),
+                              //       boxShadow: [
+                              //         BoxShadow(
+                              //           color: const Color.fromARGB(255, 0, 0, 0)
+                              //               .withOpacity(0.5), // Shadow color
+                              //           blurRadius: 5.0, // Shadow blur radius
+                              //           offset: Offset(0, 2), // Shadow offset
+                              //         ),
+                              //       ],
+                              //     ),
+                              // child: ClipRRect(
+                              //   child: Align(
+                              //     alignment: Alignment.center,
+                              //     heightFactor:
+                              //         boundNumber(500 / screenSize.height, 1, .3),
+                              //     child: Image.asset(
+                              //         platformAwarePath("images/show-bowser-ss.png")),
+                              //   ),
+                              // )
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ))));
   }
 }
 
@@ -156,44 +188,51 @@ class SplashVideo extends StatefulWidget {
 }
 
 class _SplashVideoState extends State<SplashVideo> {
-  final VideoPlayerController videoPlayerController = VideoPlayerController.networkUrl(
-    Uri.parse("https://github.com/abandonquestband/sheet-hub-public/raw/main/splash-video.mp4"));
+  final VideoPlayerController videoPlayerController =
+      VideoPlayerController.networkUrl(
+    Uri.parse(
+        "https://github.com/abandonquestband/resources-public/raw/main/splash-video.mp4"),
+  )..initialize();
+
   ChewieController? chewieController;
+  bool isMuted = true;
+  bool iphoneBug = isiPhone();
+
+  // Add an AudioPlayer instance
+  //AudioPlayer audioPlayer = AudioPlayer();
+
   @override
   void initState() {
-
     super.initState();
     _initPlayer();
   }
 
-
   void _initPlayer() async {
-    await videoPlayerController.initialize();
+    await Future.delayed(const Duration(milliseconds: 1500));
+    videoPlayerController.setVolume(0.0);
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
-      autoPlay: false,
-      
-      looping: false,
-      showOptions: true,
-      showControls: true
-      // additionalOptions: (context) {
-      //   return <OptionItem>[
-      //     OptionItem(
-      //       onTap: () => debugPrint('Option 1 pressed!'),
-      //       iconData: Icons.chat,
-      //       title: 'Option 1',
-      //     ),
-      //     OptionItem(
-      //       onTap: () =>
-      //           debugPrint('Option 2 pressed!'),
-      //       iconData: Icons.share,
-      //       title: 'Option 2',
-      //     ),
-      //   ];
-      // },
+      autoPlay: true,
+      looping: true,
+      showOptions: false,
+      showControls: false,
     );
+    setState(() {
+      
+    });
   }
 
+  void toggleMute() async {
+    print("toggleMute called");
+    setState(() {
+      isMuted = !isMuted;
+    });
+    if (!isMuted) {
+      videoPlayerController.setVolume(1.0);
+    } else {
+      videoPlayerController.setVolume(0.0);
+    }
+  }
 
   @override
   void dispose() {
@@ -201,14 +240,40 @@ class _SplashVideoState extends State<SplashVideo> {
     chewieController?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return chewieController!=null ? Chewie(
-          controller: chewieController!,
-        ) : SizedBox();
+    var screenWidth = MediaQuery.of(context).size.width;
+    var heightOfVideo = boundNumber(
+                                          8 / 17 * screenWidth,
+                                          500,
+                                          100);
+    var widthOfVideo = heightOfVideo *17/8;
+    return chewieController != null
+        ? Stack(
+            children: [
+              Chewie(
+                controller: chewieController!,
+              ),
+              ...(iphoneBug ? [] :[Positioned(
+                top: 5.0,
+                left: (screenWidth - widthOfVideo) /2 + 5.0,
+                child: GestureDetector(
+                  onTap: toggleMute,
+                  child: Image.asset(
+                    isMuted
+                        ? platformAwarePath("images/unmute-button.png")
+                        : platformAwarePath("images/mute-button.png"),
+                    width: boundNumber(
+                        screenWidth / 12, 150, 100),
+                  ),
+                ),
+              )]),
+            ],
+          )
+        : SizedBox();
   }
 }
-
 
 class TreasureChestFalling extends StatelessWidget {
   const TreasureChestFalling({

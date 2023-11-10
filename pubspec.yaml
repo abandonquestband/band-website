@@ -41,6 +41,7 @@ dependencies:
   url_strategy: ^0.2.0
   chewie: ^1.7.1
   video_player_web: ^2.1.2
+  web_smooth_scroll: ^1.1.0
 
 dev_dependencies:
   flutter_test:
