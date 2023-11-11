@@ -5,9 +5,11 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 
 class BottomSection extends StatelessWidget {
-  const BottomSection({
+  BottomSection({
+    required this.info,
     Key? key,
   }) : super(key: key);
+  String info;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class BottomSection extends StatelessWidget {
               Positioned.fill(
                 child: Center(
                   child: Text(
-                    'From Minneapolis, Minnesota, Abandon Quest puts unique spins on treasured tunes, with synchronized visuals or live gameplay.',
+                    info,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.biryani(
                       color: Colors.white,

@@ -101,18 +101,7 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return WebSmoothScroll(
-        controller: _scrollController,
-        scrollOffset: 100,
-        animationDuration: 600,
-        curve: Curves.easeInOutCirc,
-        child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: _scrollController,
-            child: Container(
-                height: widget.screenSize.height,
-                width: widget.screenSize.width,
-                child: Stack(
+    return Stack(
                   children: [
                     BackgroundContent(),
                     TreasureChestFalling(
@@ -126,7 +115,7 @@ class _MainWidgetState extends State<MainWidget> {
                         Stack(
                           children: [WelcomeScreen()],
                         ),
-                        BottomSection(),
+                        BottomSection(info: 'From Minneapolis, Minnesota, Abandon Quest puts unique spins on treasured tunes, with synchronized visuals or live gameplay.'),
                         SizedBox(
                           child: Stack(
                             alignment: Alignment.topCenter,
@@ -171,10 +160,11 @@ class _MainWidgetState extends State<MainWidget> {
                             ],
                           ),
                         ),
+                        BottomSection(info: 'Abandon quest rules!'),
                       ],
                     ),
                   ],
-                ))));
+                );
   }
 }
 
